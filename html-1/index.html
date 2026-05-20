@@ -6,35 +6,708 @@
     <title>Pong Mk II</title>
 </head> 
 <body>  
-    <header> Welcome to Pong Mk II
-
-
+    <header> WELCOME!</header>
+        <link rel="stylesheet" href="styles.css">
+    
 <main>
-<section>
-<h2>PONG</h2>
+<section class="dino" >
+
 <p>This is your place to play the vintage classic pong!</p>
 <p>Once you start you wont be able to stop</p>
-</section>
-<section>
+</section class="dino">
+<section class="bingo">
 
-    <h2>How to play</h2>
-</section>
-<ul>
- <li>
- dont let the ball pass your paddle
+    <h3>How to play</h3>
 
- </li>   
+
+
+<p>dont let the ball pass your paddle</p>
+</section class="bingo">
+ 
 
 </ul>
 <section>
-<h2>Its that simple</h2>
-
+<h4>Its that simple</h4>
+<h4>ENJOY!</h4>
 </section>
 </main> 
-<footer>
-<p>this is the end </p>
 
-<a href="https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.youtube.com/watch%3Fv%3Dfhd7FfGCdCo&ved=2ahUKEwiltsjb1LSUAxWpE1kFHX8fGRgQtwJ6BAgYEAI&usg=AOvVaw1mahWMHSwUBZbVHsruxc2h">example video</a>
 
-</footer>
+
+
+
+
 </body>
+
+ENJOY!
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111;
+    --border: #222;
+    --accent: #4a9eff;
+    --white: #fff;
+    --muted: #555;
+    --dim: #888;
+    --paddle: #fff;
+    --ball: #fff;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Share Tech Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 2rem;
+    height: 56px;
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+  }
+
+  /* MAIN */
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .title-block { text-align: center; }
+  .title-block h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 2.8rem;
+    letter-spacing: 6px;
+    margin-bottom: 0.25rem;
+  }
+  .title-block p { color: var(--dim); font-size: 0.9rem; }
+
+  /* CANVAS WRAPPER */
+  .game-wrapper {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #000;
+    width: 880px;
+    max-width: 100%;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+  }
+
+  /* Overlay screens */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.88);
+    gap: 1rem;
+    transition: opacity 0.3s;
+  }
+  .overlay.hidden { opacity: 0; pointer-events: none; }
+  .overlay h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 4px;
+  }
+  .overlay p { color: var(--dim); font-size: 0.9rem; }
+  .overlay-btn {
+    background: var(--accent);
+    border: none;
+    color: #000;
+    padding: 0.6rem 2rem;
+    border-radius: 6px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: opacity 0.2s;
+  }
+  .overlay-btn:hover { opacity: 0.85; }
+
+  /* Mode select cards */
+  .mode-cards {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  .mode-card {
+    background: #111;
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 1.2rem 1.6rem;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.2s, background 0.2s;
+    min-width: 140px;
+    font-family: 'Orbitron', sans-serif;
+  }
+  .mode-card:hover { border-color: var(--accent); background: #161f2e; }
+  .mode-card.selected { border-color: var(--accent); background: #0d1a2b; }
+  .mode-card .mode-icon { font-size: 1.8rem; margin-bottom: 0.4rem; }
+  .mode-card .mode-label { font-size: 0.7rem; letter-spacing: 2px; color: var(--white); }
+  .mode-card .mode-sub { font-size: 0.6rem; color: var(--dim); margin-top: 0.25rem; font-family: 'Share Tech Mono', monospace; letter-spacing: 0; }
+
+  /* Difficulty pills */
+  .diff-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+  }
+  .diff-pill {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: var(--dim);
+    padding: 0.3rem 0.9rem;
+    border-radius: 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .diff-pill:hover { border-color: var(--accent); color: var(--white); }
+  .diff-pill.selected { background: var(--accent); border-color: var(--accent); color: #000; }
+  .diff-label { color: var(--dim); font-size: 0.75rem; margin-top: 0.5rem; }
+
+  /* AI badge on canvas */
+  .ai-badge {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: #0d1a2b;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .ai-badge.visible { opacity: 1; }
+
+  /* BOTTOM PANELS */
+  .bottom-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 880px;
+    max-width: 100%;
+  }
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+  }
+  .panel h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+  .controls-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  .controls-col h4 {
+    font-size: 0.78rem;
+    color: var(--dim);
+    margin-bottom: 0.6rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+  }
+  .key-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.45rem;
+    font-size: 0.8rem;
+    color: var(--dim);
+  }
+  .key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: #1c1c1c;
+    border: 1px solid #333;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    color: var(--white);
+    font-family: inherit;
+    flex-shrink: 0;
+  }
+  .about-text { color: var(--dim); font-size: 0.82rem; line-height: 1.7; }
+
+  /* RESTART BTN */
+  .restart-wrap { display: flex; justify-content: center; }
+  .restart-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #1a1a1a;
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 0.55rem 1.5rem;
+    border-radius: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .restart-btn:hover { background: #222; }
+  .restart-btn svg { width: 16px; height: 16px; }
+
+  /* Win flash */
+  @keyframes flash { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .flash { animation: flash 0.4s ease 3; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">PONG</span>
+</nav>
+
+<main>
+  <div class="title-block">
+   
+    <p>The classic game. Simple rules. Endless fun.</p>
+  </div>
+
+  <div class="game-wrapper">
+    <canvas id="pong" width="880" height="480"></canvas>
+
+    <!-- Mode select overlay -->
+    <div class="overlay" id="startOverlay">
+
+      <p>Choose your game mode</p>
+      <div class="mode-cards">
+        <div class="mode-card selected" id="modeLocal">
+          <div class="mode-icon">👥</div>
+          <div class="mode-label">LOCAL</div>
+          <div class="mode-sub">2 Players</div>
+        </div>
+        <div class="mode-card" id="modeAI">
+          <div class="mode-icon">🤖</div>
+          <div class="mode-label">VS AI</div>
+          <div class="mode-sub">1 Player</div>
+        </div>
+      </div>
+      <!-- Difficulty row (shown only in AI mode) -->
+      <div id="diffRow" style="display:none; flex-direction:column; align-items:center; gap:0.4rem;">
+        <span class="diff-label">DIFFICULTY</span>
+        <div class="diff-row">
+          <button class="diff-pill" id="diffEasy">EASY</button>
+          <button class="diff-pill selected" id="diffMedium">MEDIUM</button>
+          <button class="diff-pill" id="diffHard">HARD</button>
+        </div>
+      </div>
+      <button class="overlay-btn" id="startBtn">START GAME</button>
+    </div>
+
+    <!-- Win overlay -->
+    <div class="overlay hidden" id="winOverlay">
+      <h2 id="winMsg">PLAYER 1 WINS</h2>
+      <p id="winScore"></p>
+      <button class="overlay-btn" id="playAgainBtn">PLAY AGAIN</button>
+    </div>
+
+    <!-- AI badge -->
+    <div class="ai-badge" id="aiBadge">AI OPPONENT</div>
+  </div>
+
+  <div class="bottom-panels">
+    <div class="panel" style="grid-column: 1 / -1;">
+      <h3>CONTROLS</h3>
+      <div class="controls-grid">
+        <div class="controls-col">
+          <h4>Player 1 (Left Paddle)</h4>
+          <div class="key-row"><span class="key">W</span> Move Up</div>
+          <div class="key-row"><span class="key">S</span> Move Down</div>
+        </div>
+        <div class="controls-col" id="p2Controls">
+          <h4>Player 2 (Right Paddle)</h4>
+          <div class="key-row"><span class="key">↑</span> Move Up</div>
+          <div class="key-row"><span class="key">↓</span> Move Down</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="restart-wrap">
+    <button class="restart-btn" id="restartBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/>
+      </svg>
+      Restart Game
+    </button>
+  </div>
+</main>
+
+<script>
+const canvas = document.getElementById('pong');
+const ctx = canvas.getContext('2d');
+
+const W = canvas.width;
+const H = canvas.height;
+
+const PADDLE_W = 14, PADDLE_H = 90, PADDLE_SPEED = 7;
+const BALL_SIZE = 12;
+const WINNING_SCORE = 7;
+
+let gameRunning = false;
+let gameMode = 'local';   // 'local' | 'ai'
+let aiDifficulty = 'medium'; // 'easy' | 'medium' | 'hard'
+
+// AI config per difficulty
+const AI_CONFIG = {
+  easy:   { speed: 2.8, reactionZone: W * 0.35, errorRange: 40, lag: 0.06 },
+  medium: { speed: 4.5, reactionZone: W * 0.55, errorRange: 18, lag: 0.10 },
+  hard:   { speed: 6.8, reactionZone: W * 0.85, errorRange: 4,  lag: 0.18 },
+};
+
+// AI state
+let aiTargetY = H / 2;
+let aiErrorOffset = 0;
+
+const state = {
+  p1: { y: H/2 - PADDLE_H/2, score: 0 },
+  p2: { y: H/2 - PADDLE_H/2, score: 0 },
+  ball: { x: W/2, y: H/2, vx: 0, vy: 0 },
+  keys: {}
+};
+
+function resetBall(dir = 1) {
+  state.ball.x = W / 2;
+  state.ball.y = H / 2;
+  const speed = 5.5;
+  const angle = (Math.random() * 0.6 - 0.3);
+  state.ball.vx = dir * speed * Math.cos(angle);
+  state.ball.vy = speed * Math.sin(angle);
+  aiErrorOffset = (Math.random() - 0.5) * (AI_CONFIG[aiDifficulty]?.errorRange || 18) * 2;
+}
+
+function resetGame() {
+  state.p1.y = H/2 - PADDLE_H/2;
+  state.p2.y = H/2 - PADDLE_H/2;
+  state.p1.score = 0;
+  state.p2.score = 0;
+  aiTargetY = H / 2;
+  resetBall(Math.random() > 0.5 ? 1 : -1);
+}
+
+// ── AI paddle update ──────────────────────────────────────
+function updateAI() {
+  const cfg = AI_CONFIG[aiDifficulty];
+  const p2x = W - 20 - PADDLE_W;
+
+  // Only react when ball is heading toward AI side and within reaction zone
+  if (state.ball.vx > 0 && state.ball.x > W - cfg.reactionZone) {
+    // Predict where ball will be when it reaches the paddle
+    const dist = p2x - state.ball.x;
+    const t = dist / (state.ball.vx || 1);
+    let predictY = state.ball.y + state.ball.vy * t;
+
+    // Bounce prediction (one wall bounce)
+    if (predictY < 0) predictY = -predictY;
+    else if (predictY > H) predictY = 2 * H - predictY;
+    predictY = Math.max(0, Math.min(H, predictY));
+
+    aiTargetY = predictY - PADDLE_H / 2 + aiErrorOffset;
+  } else if (state.ball.vx < 0) {
+    // Ball moving away — drift back to center lazily
+    aiTargetY += (H / 2 - PADDLE_H / 2 - aiTargetY) * 0.02;
+  }
+
+  // Smoothly move toward target
+  const center = state.p2.y + PADDLE_H / 2;
+  const target = aiTargetY + PADDLE_H / 2;
+  const diff = target - center;
+
+  if (Math.abs(diff) > 2) {
+    state.p2.y += Math.sign(diff) * Math.min(cfg.speed, Math.abs(diff));
+  }
+  state.p2.y = Math.max(0, Math.min(H - PADDLE_H, state.p2.y));
+}
+
+function update() {
+  if (!gameRunning) return;
+
+  // P1 always human
+  if (state.keys['w'] || state.keys['W']) state.p1.y -= PADDLE_SPEED;
+  if (state.keys['s'] || state.keys['S']) state.p1.y += PADDLE_SPEED;
+  state.p1.y = Math.max(0, Math.min(H - PADDLE_H, state.p1.y));
+
+  // P2: human or AI
+  if (gameMode === 'ai') {
+    updateAI();
+  } else {
+    if (state.keys['ArrowUp'])   state.p2.y -= PADDLE_SPEED;
+    if (state.keys['ArrowDown']) state.p2.y += PADDLE_SPEED;
+    state.p2.y = Math.max(0, Math.min(H - PADDLE_H, state.p2.y));
+  }
+
+  // Ball movement
+  state.ball.x += state.ball.vx;
+  state.ball.y += state.ball.vy;
+
+  // Wall bounce
+  if (state.ball.y <= 0)              { state.ball.y = 0;             state.ball.vy *= -1; }
+  if (state.ball.y + BALL_SIZE >= H)  { state.ball.y = H - BALL_SIZE; state.ball.vy *= -1; }
+
+  function hitPaddle(px, py) {
+    return state.ball.x < px + PADDLE_W &&
+           state.ball.x + BALL_SIZE > px &&
+           state.ball.y < py + PADDLE_H &&
+           state.ball.y + BALL_SIZE > py;
+  }
+
+  const p1x = 20;
+  if (hitPaddle(p1x, state.p1.y) && state.ball.vx < 0) {
+    state.ball.x = p1x + PADDLE_W;
+    state.ball.vx *= -1.05;
+    const hitPos = (state.ball.y + BALL_SIZE/2) - (state.p1.y + PADDLE_H/2);
+    state.ball.vy = hitPos * 0.2;
+    capSpeed();
+    // New error offset each rally for AI
+    aiErrorOffset = (Math.random() - 0.5) * (AI_CONFIG[aiDifficulty]?.errorRange || 18) * 2;
+  }
+
+  const p2x = W - 20 - PADDLE_W;
+  if (hitPaddle(p2x, state.p2.y) && state.ball.vx > 0) {
+    state.ball.x = p2x - BALL_SIZE;
+    state.ball.vx *= -1.05;
+    const hitPos = (state.ball.y + BALL_SIZE/2) - (state.p2.y + PADDLE_H/2);
+    state.ball.vy = hitPos * 0.2;
+    capSpeed();
+  }
+
+  // Scoring
+  if (state.ball.x < 0) {
+    state.p2.score++;
+    checkWin(2);
+    if (gameRunning) resetBall(1);
+  }
+  if (state.ball.x > W) {
+    state.p1.score++;
+    checkWin(1);
+    if (gameRunning) resetBall(-1);
+  }
+}
+
+function capSpeed() {
+  const maxSpeed = 14;
+  const speed = Math.sqrt(state.ball.vx**2 + state.ball.vy**2);
+  if (speed > maxSpeed) {
+    state.ball.vx = (state.ball.vx / speed) * maxSpeed;
+    state.ball.vy = (state.ball.vy / speed) * maxSpeed;
+  }
+}
+
+function checkWin(player) {
+  const score = player === 1 ? state.p1.score : state.p2.score;
+  if (score >= WINNING_SCORE) {
+    gameRunning = false;
+    let msg;
+    if (gameMode === 'ai') {
+      msg = player === 1 ? 'YOU WIN!' : 'AI WINS!';
+    } else {
+      msg = `PLAYER ${player} WINS`;
+    }
+    document.getElementById('winMsg').textContent = msg;
+    document.getElementById('winScore').textContent = `${state.p1.score} — ${state.p2.score}`;
+    document.getElementById('winOverlay').classList.remove('hidden');
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  // Center dashed line
+  ctx.setLineDash([12, 12]);
+  ctx.strokeStyle = '#ffffff33';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(W/2, 0);
+  ctx.lineTo(W/2, H);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Scores
+  ctx.fillStyle = '#fff';
+  ctx.font = `bold 56px 'Orbitron', monospace`;
+  ctx.textAlign = 'center';
+  ctx.fillText(state.p1.score, W/2 - 100, 75);
+  ctx.fillText(state.p2.score, W/2 + 100, 75);
+
+  // P1 label
+  ctx.font = `11px 'Share Tech Mono', monospace`;
+  ctx.fillStyle = '#555';
+  ctx.fillText('P1', W/2 - 100, 95);
+  ctx.fillText(gameMode === 'ai' ? 'AI' : 'P2', W/2 + 100, 95);
+
+  // Paddles
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  roundRect(ctx, 20, state.p1.y, PADDLE_W, PADDLE_H, 4);
+  ctx.fill();
+
+  // AI paddle gets a subtle blue tint
+  ctx.fillStyle = gameMode === 'ai' ? '#7ec8ff' : '#fff';
+  ctx.beginPath();
+  roundRect(ctx, W - 20 - PADDLE_W, state.p2.y, PADDLE_W, PADDLE_H, 4);
+  ctx.fill();
+
+  // Ball with glow
+  ctx.shadowColor = '#4a9eff';
+  ctx.shadowBlur = 12;
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(state.ball.x, state.ball.y, BALL_SIZE, BALL_SIZE);
+  ctx.shadowBlur = 0;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+}
+
+function loop() {
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+// ── UI: mode selection ───────────────────────────────────
+const modeLocalCard = document.getElementById('modeLocal');
+const modeAICard    = document.getElementById('modeAI');
+const diffRow       = document.getElementById('diffRow');
+const aiBadge       = document.getElementById('aiBadge');
+const p2Controls    = document.getElementById('p2Controls');
+
+function selectMode(mode) {
+  gameMode = mode;
+  modeLocalCard.classList.toggle('selected', mode === 'local');
+  modeAICard.classList.toggle('selected', mode === 'ai');
+  diffRow.style.display = mode === 'ai' ? 'flex' : 'none';
+}
+
+modeLocalCard.addEventListener('click', () => selectMode('local'));
+modeAICard.addEventListener('click',    () => selectMode('ai'));
+
+// Difficulty pills
+const pills = {
+  easy:   document.getElementById('diffEasy'),
+  medium: document.getElementById('diffMedium'),
+  hard:   document.getElementById('diffHard'),
+};
+Object.entries(pills).forEach(([diff, btn]) => {
+  btn.addEventListener('click', () => {
+    aiDifficulty = diff;
+    Object.values(pills).forEach(p => p.classList.remove('selected'));
+    btn.classList.add('selected');
+  });
+});
+
+function applyModeUI() {
+  if (gameMode === 'ai') {
+    aiBadge.classList.add('visible');
+    p2Controls.innerHTML = `
+      <h4>AI Opponent</h4>
+      <div class="key-row" style="color:#4a9eff;">🤖 Controlled by CPU</div>
+      <div class="key-row" style="color:#555;font-size:0.72rem;">Difficulty: ${aiDifficulty.toUpperCase()}</div>`;
+  } else {
+    aiBadge.classList.remove('visible');
+    p2Controls.innerHTML = `
+      <h4>Player 2 (Right Paddle)</h4>
+      <div class="key-row"><span class="key">↑</span> Move Up</div>
+      <div class="key-row"><span class="key">↓</span> Move Down</div>`;
+  }
+}
+
+// ── Buttons ──────────────────────────────────────────────
+function startGame() {
+  applyModeUI();
+  resetGame();
+  gameRunning = true;
+}
+
+document.getElementById('startBtn').addEventListener('click', () => {
+  document.getElementById('startOverlay').classList.add('hidden');
+  startGame();
+});
+
+document.getElementById('playAgainBtn').addEventListener('click', () => {
+  document.getElementById('winOverlay').classList.add('hidden');
+  startGame();
+});
+
+document.getElementById('restartBtn').addEventListener('click', () => {
+  document.getElementById('winOverlay').classList.add('hidden');
+  document.getElementById('startOverlay').classList.remove('hidden');
+  gameRunning = false;
+  // Reset scores display
+  state.p1.score = 0; state.p2.score = 0;
+});
+
+// Input
+document.addEventListener('keydown', e => {
+  state.keys[e.key] = true;
+  if (['ArrowUp','ArrowDown',' '].includes(e.key)) e.preventDefault();
+});
+document.addEventListener('keyup', e => { state.keys[e.key] = false; });
+
+loop();
+</script>
+</body>
+</html>
+

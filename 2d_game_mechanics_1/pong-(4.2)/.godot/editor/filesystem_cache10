@@ -1,0 +1,12 @@
+63f7b34db8d8cdea90c76aacccf841ec
+::res://::1779302873
+README.md::TextFile::-1::1779224802::0::1::::<><><>0<>0<><>::
+::res://scenes/::1779224802
+Game.tscn::PackedScene::236236::1779224802::0::1::::<><><>0<>0<><>::res://scripts/Game.gd
+MainMenu.tscn::PackedScene::630661534222::1779224802::0::1::::<><><>0<>0<><>::res://scripts/MainMenu.gd
+::res://scripts/::1779302817
+Game.gd::GDScript::2690248481041096795::1779224802::0::1::::<>Node2D<><>0<>0<><>::
+GameConstants.gd::GDScript::6990381592440546122::1779224802::0::1::::<>Node<><>0<>0<><>::
+GameState.gd::GDScript::4328470094938879710::1779224802::0::1::::<>Node<><>0<>0<><>::
+MainMenu.gd::GDScript::3782339681235205258::1779224802::0::1::::<>Control<><>0<>0<><>::
+::res://{scenes,scripts,assets}/::1779224802
